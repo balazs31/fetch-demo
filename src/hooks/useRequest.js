@@ -3,8 +3,8 @@ import axios from "axios";
 
 export default function useRequest(request, { initialData, ...config } = {}) {
   const { data: response, error, isValidating, revalidate } = useSWR(
-    request && JSON.stringify(request),
-    () => axios(request || {}),
+    request?.url,
+    (url) => fetch(url).then(r => r.json()),
     {
       ...config,
       revalidateOnFocus: false,
@@ -19,7 +19,7 @@ export default function useRequest(request, { initialData, ...config } = {}) {
   );
 
   return {
-    data: response && response.data,
+    data: response,
     response,
     error,
     isValidating,

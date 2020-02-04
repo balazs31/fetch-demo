@@ -23,6 +23,15 @@ const Container = styled("div")(props => ({
   display: "flex"
 }));
 
+const onSuccess = event => {
+  console.log(event);
+};
+
+const onError = event => {
+  console.error(event)
+
+}
+
 /**
  * Displays the component
  */
@@ -35,24 +44,29 @@ const Dashboard = props => {
   });
   const { title, email, password, name } = inputs;
   const [request, setRequest] = useState({
-    url: `http://hn.algolia.com/api/v1/search?page=1&query=}`
+    url: `http://hn.algolia.com/api/v1/search?page=1&query=asd`
   });
-  const [loginRequest, setLoginRequest] = useState({});
-  const [registerRequest, setReqisterRequest] = useState({});
+  const [loginRequest, setLoginRequest] = useState(null);
+  const [registerRequest, setReqisterRequest] = useState(null);
 
-  const { error, data, revalidate, isValidating } = useRequest(request);
+  const { response, error, data, revalidate, isValidating } = useRequest(request, { onSuccess: onSuccess, onError: onError });
+
+ 
+
   const {
     error: loginError,
     data: loginData,
     revalidate: loginRevalidate,
-    isValidating: loginIsValidating
-  } = useRequest(loginRequest);
+    isValidating: loginIsValidating,
+    response: loginResponse
+  } = useRequest(loginRequest, { onSuccess: onSuccess, onError: onError });
   const {
     error: registerError,
     data: registerData,
     revalidate: registerRevalidate,
     isValidating: registerIsValidating
   } = useRequest(registerRequest);
+
 
   const handleChange = event => {
     const {
@@ -92,14 +106,15 @@ const Dashboard = props => {
     event.preventDefault();
 
     const encodedUser = queryString.stringify({ email, password });
-    setRequest({ url: `http://api.finsterdata.com/v1/login?${encodedUser}` });
+    setLoginRequest({
+      url: `http://api.finsterdata.com/v1/login?${encodedUser}`
+    });
   };
 
   const handleRegister = event => {
     event.preventDefault();
   };
 
-  console.log(data, loginData);
   return (
     <Container className="Dashboard">
       {isValidating && <div>Loading...</div>}
@@ -117,6 +132,8 @@ const Dashboard = props => {
 
         <div>
           {data &&
+            data.hits &&
+            data.hits.length &&
             data.hits.map(hit => {
               return (
                 <div key={hit.created_at_i}>
