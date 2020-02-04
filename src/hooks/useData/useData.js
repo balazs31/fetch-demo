@@ -17,6 +17,7 @@ import useDataAsync, {
   useDataAsyncGetHookProps,
   useDataAsyncGetInitialValue
 } from "./strategies/useDataAsync";
+import useRequest, { useRequestGetInitialValue, useRequestGetHookProps } from "../useRequest";
 
 /**
  * Defines the prop types
@@ -37,32 +38,35 @@ const useData = props => {
    *
    * - This step has to be performed to map a strategy to the hook code below
    */
-  const initialValue = useDataAsyncGetInitialValue(props);
-  const hookProps = useDataAsyncGetHookProps(props);
+  // const initialValue = useDataAsyncGetInitialValue(props);
+    const initialValue = useRequestGetInitialValue(props);
+
+  // const hookProps = useDataAsyncGetHookProps(props);
+  const hookProps = useRequestGetHookProps(props);
 
   /**
    * Queries the API
    */
-  const { data, error, reload, cancel } = useDataAsync(hookProps);
-
+  // const { data, error, reload, cancel } = useDataAsync(hookProps);
+  const { data, error, revalidate: reload} = useRequest(hookProps)
   /**
    * Returns default data while real data is loaded from the API
    */
   if (data === undefined) {
-    return { data: initialValue, error, reload, cancel };
+    return { data: initialValue, error, reload };
   }
 
   /**
    * Returns the error
    */
   if (error) {
-    return { data: null, error, reload, cancel };
+    return { data: null, error, reload };
   }
 
   /**
    * Returns data and functions
    */
-  return { data: data, reload, cancel };
+  return { data: data, reload };
 };
 
 useData.propTypes = propTypes;
@@ -72,6 +76,6 @@ export default useData;
 export {
   propTypes as useDataPropTypes,
   defaultProps as useDataDefaultProps,
-  useDataAsyncGetHookProps as getUseDataHookProps,
-  useDataAsyncGetInitialValue as getUseDataInitialValue
+  useRequestGetHookProps as getUseDataHookProps,
+  useRequestGetInitialValue as getUseDataInitialValue
 };
