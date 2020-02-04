@@ -1,0 +1,1 @@
+export { useAuthStrategyTokenReqres } from "./useAuthStrategyTokenReqres";

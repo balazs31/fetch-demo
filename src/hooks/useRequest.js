@@ -1,0 +1,28 @@
+import useSWR from "swr";
+import axios from "axios";
+
+export default function useRequest(request, { initialData, ...config } = {}) {
+  const { data: response, error, isValidating, revalidate } = useSWR(
+    request && JSON.stringify(request),
+    () => axios(request || {}),
+    {
+      ...config,
+      revalidateOnFocus: false,
+      shouldRetryOnError: false,
+      initialData: initialData && {
+        status: 200,
+        statusText: "InitialData",
+        headers: {},
+        data: initialData
+      }
+    }
+  );
+
+  return {
+    data: response && response.data,
+    response,
+    error,
+    isValidating,
+    revalidate
+  };
+}

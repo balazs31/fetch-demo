@@ -1,0 +1,1 @@
+export { useAuthStrategyTokenFinster } from "./useAuthStrategyTokenFinster";
