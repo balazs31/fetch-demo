@@ -63,6 +63,7 @@ const getHookProps = props => {
 
 const useRequest = props => {
   const { url, options } = props;
+  console.log(props)
   const { initialData } = options;
   const { data: response, error, isValidating, revalidate } = useSWR(
     url,

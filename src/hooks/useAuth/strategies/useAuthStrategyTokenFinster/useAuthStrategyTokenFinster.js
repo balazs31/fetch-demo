@@ -128,7 +128,6 @@ const useAuthStrategyTokenFinster = props => {
    * Manages the API calls (login, register, etc.)
    */
   const [apiCall, setApiCall] = useState(getUseDataHookProps(api));
-  console.log(apiCall)
   /**
    * Performs an API call
    */
@@ -147,15 +146,14 @@ const useAuthStrategyTokenFinster = props => {
   /**
    * Defines the login function
    */
-  login = user => {
+  login = (user, errorFn) => {
     const encodedUser = queryString.stringify(user);
  
     setApiCall(
       getUseDataHookProps({
         url: `http://api.finsterdata.com/v1/login?${encodedUser}`,
         options: {
-          promiseFn: fetcherLogin,
-          promiseFnParams: { user: user },
+          onError: errorFn,
           initialValue: "Logging in ..."
         }
       })

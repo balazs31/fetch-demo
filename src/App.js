@@ -8,8 +8,8 @@ import { AuthProvider } from "./hooks";
 function App() {
   return ( 
     <AuthProvider strategy="finster">
-       {/* <Dashboard></Dashboard> */}
-      <Login></Login>
+       <Dashboard></Dashboard>
+      {/* <Login></Login> */}
     </AuthProvider>
   );
 }

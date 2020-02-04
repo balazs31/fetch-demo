@@ -45,10 +45,13 @@ const Login = props => {
     }));
   };
 
+  const handleError = error => {
+    console.error(error)
+  }
   const handleLogin = event => {
     event.preventDefault();
 
-    login({email, password})
+    login({email, password}, handleError)
   };
 
   return <Container className="Login">
